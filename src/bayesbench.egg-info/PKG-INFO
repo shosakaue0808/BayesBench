@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: bayesbench
+Version: 0.1.0
+Summary: A reproducible benchmark platform for Bayesian optimization and active learning.
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: scikit-learn
+Requires-Dist: matplotlib
+Requires-Dist: pandas
+Requires-Dist: tqdm
+Requires-Dist: pytest
+
+# BayesBench
+BayesBench is a reproducible benchmark platform for studying sample-efficient learning: it compares Bayesian optimization and active learning algorithms under limited evaluation budgets using Gaussian Process uncertainty and acquisition functions.

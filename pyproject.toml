@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+#project information
+[project]
+name = "bayesbench"
+version = "0.1.0"
+description = "A reproducible benchmark platform for Bayesian optimization and active learning."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "scipy",
+    "scikit-learn",
+    "matplotlib",
+    "pandas",
+    "tqdm",
+    "pytest"
+]
+
+#tell setuptools that package code is inside src
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
