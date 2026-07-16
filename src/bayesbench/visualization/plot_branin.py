@@ -1,13 +1,13 @@
 from pathlib import Path
 
-from bayesbench.visualization.plot import plot_best_so_far
+from bayesbench.visualization.plot import plot_best_so_far, plot_regret
 
 
 def main() -> None:
-    input_path = "results/branin/branin_gp_ei.csv"
-    output_path = "results/branin/branin_gp_ei.png"
+    input_path = "results/branin/branin_gp_ei_regret.csv"
+    output_path = "results/branin/branin_gp_ei_regret.png"
 
-    plot_best_so_far(
+    plot_regret(
         input_path=input_path,
         output_path=output_path,
         title="Branin Optimization: Gaussian Process Expected Improvement",
