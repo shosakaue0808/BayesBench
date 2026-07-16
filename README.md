@@ -2,7 +2,7 @@
 
 BayesBench is a reproducible benchmark framework for **Bayesian Optimization** and **sample-efficient black-box optimization**.
 
-The goal of this project is to study how different optimization methods such as **Gaussian Process Bayesian Optimization with Expected Improvement (GP-EI)** perform on standard benchmark functions under a limited evaluation budget compared to **Random Search**.
+The goal of this project is to study how different optimization methods, such as **Gaussian Process Bayesian Optimization with Expected Improvement (GP-EI)** or **Upper Confidence Bound (UCB)**, perform on standard benchmark functions under a limited evaluation budget compared to **Random Search**.
 
 ## Current Status
 
