@@ -7,7 +7,7 @@ from sklearn.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
 from bayesbench.acquisition.expected_improvement import expected_improvement
 from bayesbench.optimizers.random_search import sample_uniform
 
-def make_gp_model() -> GaussianProcessRegressor:
+def make_gp_model(random_state:int = 42) -> GaussianProcessRegressor:
     """
     Create a Gaussian Process surrogate model for Bayesian optimization.
     """
@@ -21,25 +21,28 @@ def make_gp_model() -> GaussianProcessRegressor:
         kernel=kernel,
         normalize_y=True,
         n_restarts_optimizer=5,
-        random_state=None,
+        random_state=random_state,
     )
 
 def generate_candidate_points(
     bounds: np.ndarray,
     n_candidates: int,
+    rng: np.random.Generator
     ) -> np.ndarray:
     """
     Generate random candidate n points (x1, x2) where Expected Improvement is evaluated. 
     This is used to get next sample point to evaluate the objective fucntion
     """
     return np.array(
-        [sample_uniform(bounds) for _ in range(n_candidates)]
+        [sample_uniform(bounds, rng) for _ in range(n_candidates)]
     )
 
 def gp_expected_improvement(
     objective: Callable[[np.ndarray], float],
     bounds: np.ndarray,
     budget: int,
+    rng: np.random.Generator,
+    random_state: int= 42,
     n_initial: int = 5,
     n_candidates: int = 1000,
     xi: float = 0.01,
@@ -84,7 +87,7 @@ def gp_expected_improvement(
 
     # 1. Initial random evaluations to generate GP model
     for _ in range(n_initial):
-        x = sample_uniform(bounds)
+        x = sample_uniform(bounds, rng)
         value = objective(x)
 
         X.append(x)
@@ -98,13 +101,14 @@ def gp_expected_improvement(
         # Fit GP surrogate to observed data. This updates the GP model with new observations.
         # the GP has learned a posterior distribution over possible functions 
         # that are consistent with the observed data.
-        gp = make_gp_model()
+        gp = make_gp_model(random_state=random_state)
         gp.fit(X_train, y_train)
 
         # Generate candidate points and compute GP predictions
         candidates = generate_candidate_points(
             bounds=bounds,
             n_candidates=n_candidates,
+            rng=rng
         )
 
         # Compute mean and standard deviation of GP predictions (function values) at candidate points

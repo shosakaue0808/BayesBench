@@ -7,19 +7,19 @@ import numpy as np
 import random
 from collections.abc import Callable
 
-def sample_uniform(bounds: np.ndarray)->np.ndarray:
+def sample_uniform(bounds: np.ndarray, rng: np.random.Generator)->np.ndarray:
     """
     sample one (x1, x2)point uniformly from bounds
     """
     x1_l, x1_u = bounds[0]
     x2_l, x2_u = bounds[1]
-    x1_sample = random.uniform(x1_l, x1_u)
-    x2_sample = random.uniform(x2_l, x2_u)
+    x1_sample = rng.uniform(x1_l, x1_u)
+    x2_sample = rng.uniform(x2_l, x2_u)
 
     return np.array([x1_sample, x2_sample], float)
 
 def random_search(objective: Callable[[np.ndarray], float], 
-                  bounds: np.ndarray, budget: int)-> tuple[np.ndarray, np.ndarray]:
+                  bounds: np.ndarray, budget: int, rng: np.random.Generator)-> tuple[np.ndarray, np.ndarray]:
     """
     Run random search on a blackbox objective. 
     Parameters
@@ -43,7 +43,7 @@ def random_search(objective: Callable[[np.ndarray], float],
     y = []
 
     for _ in range(budget):
-        x = sample_uniform(bounds)
+        x = sample_uniform(bounds, rng)
         value = objective(x)
 
         X.append(x)

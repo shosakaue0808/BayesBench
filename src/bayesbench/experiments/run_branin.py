@@ -35,25 +35,28 @@ def make_results_df(X: np.ndarray, y: np.ndarray, optimizer: str) -> pd.DataFram
 def main():
     bounds = branin_bounds()
     budget = 50
-    
+    seeds = [42, 0, 456]  # Example seeds for reproducibility
+    seed = seeds[1]
     #sample inputs and get outputs on objective and return Lists
-    X, y = random_search(objective=branin, bounds=bounds, budget=budget)
+    rng = np.random.default_rng(seed=seed)
+    X, y = random_search(objective=branin, bounds=bounds, budget=budget, rng=rng)
     df_random = make_results_df(X, y, optimizer="random_search")
 
     results_branin_dir = Path("results/branin")
     results_branin_dir.mkdir(exist_ok=True)
 
-    output_path = results_branin_dir / "branin_random_search.csv"
+    output_path = results_branin_dir / f"branin_random_search_{seed}.csv"
     df_random.to_csv(output_path, index=False)
 
     print()
     print(f"Saved results to: {output_path}")
     print(f"Best value found: {df_random['best_so_far'].iloc[-1]:.6f}")
 
-    X, y = gp_expected_improvement(objective=branin, bounds= bounds, budget= budget)
+    X, y = gp_expected_improvement(objective=branin, bounds= bounds, 
+                                   budget=budget, rng=rng, random_state=seed)
     df_gp_ei = make_results_df(X, y, optimizer="gp_ei")
 
-    out_put_path = results_branin_dir / "branin_gp_ei.csv"
+    out_put_path = results_branin_dir / f"branin_gp_ei_{seed}.csv"
     df_gp_ei.to_csv(out_put_path, index=False)
     print()
     print(f"Saved results to: {output_path}")
