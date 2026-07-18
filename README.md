@@ -7,7 +7,7 @@ The goal of this project is to study how different optimization methods, such as
 ## Current Status
 
 BayesBench is an **in-progress** project.  
-The first benchmark pipeline is implemented for the **Branin function**, including:
+The first benchmark pipeline is implemented for the **Branin function** and **Ackley function**, including:
 
 - a synthetic optimization benchmark,
 - a random search baseline,
