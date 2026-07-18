@@ -9,14 +9,9 @@ from collections.abc import Callable
 
 def sample_uniform(bounds: np.ndarray, rng: np.random.Generator)->np.ndarray:
     """
-    sample one (x1, x2)point uniformly from bounds
+    sample one (x1, x2, ... xd) point uniformly from bounds
     """
-    x1_l, x1_u = bounds[0]
-    x2_l, x2_u = bounds[1]
-    x1_sample = rng.uniform(x1_l, x1_u)
-    x2_sample = rng.uniform(x2_l, x2_u)
-
-    return np.array([x1_sample, x2_sample], float)
+    return rng.uniform(bounds[:, 0], bounds[:, 1])
 
 def random_search(objective: Callable[[np.ndarray], float], 
                   bounds: np.ndarray, budget: int, rng: np.random.Generator)-> tuple[np.ndarray, np.ndarray]:
