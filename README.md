@@ -16,7 +16,7 @@ The first benchmark pipeline is implemented for the **Branin function**, includi
 - an experiment runner,
 - and visualization tools for comparing methods.
 
-![Branin comparison](results/branin/multi_opt_42.png)
+![Branin comparison](results/branin/multi_opt_0.png)
 
 ## Why this project?
 
