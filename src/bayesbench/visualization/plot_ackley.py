@@ -1,45 +1,10 @@
 from pathlib import Path
 
-from bayesbench.visualization.plot import plot_best_so_far, plot_multi_opt_best_so_far
+from bayesbench.visualization.plot import plot_all
 
 
 def main() -> None:
-    seed = 42
-    input_path_gp_ei = f"results/ackley/ackley_gp_ei_{seed}.csv"
-    input_path_random_search = f"results/ackley/ackley_random_search_{seed}.csv"
-
-    output_path = f"results/ackley/ackley_gp_ei_{seed}.png"
-    plot_best_so_far(
-        input_path=input_path_gp_ei,
-        output_path=output_path,
-        title="Ackley Optimization: Gaussian Process Expected Improvement",
-        seed=seed
-    )
-
-    print(f"Saved plot to: {output_path}")
-
-    output_path = f"results/ackley/ackley_random_search_{seed}.png"
-
-    plot_best_so_far(
-        input_path=input_path_random_search,
-        output_path=output_path,
-        title="Ackley Optimization: Random Search",
-        seed=seed
-    )
-
-    print(f"Saved plot to: {output_path}")
-
-    output_path = f"results/ackley/ackley_multi_opt_{seed}.png"
-    input_paths = [input_path_gp_ei, input_path_random_search]
-
-    plot_multi_opt_best_so_far(
-        input_paths=input_paths,
-        output_path=output_path,
-        title=f"Ackley Optimization: Multiple Optimizers",
-        seed=seed
-    )
-
-    print(f"Saved plot to: {output_path}")
-
+    seed = 0
+    plot_all(seed, "ackley")
 if __name__ == "__main__":
     main()

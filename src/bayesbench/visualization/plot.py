@@ -141,3 +141,41 @@ def plot_regret(input_path: str, output_path: str, title: str, seed: int) -> Non
         Plot title.
     """
     plot_metric(input_path, output_path, title, seed, REGRET_COLUMNS)
+
+
+def plot_all(seed: int, objective_str: str)-> None:
+    input_path_gp_ei = f"results/{objective_str}/gp_ei_{seed}.csv"
+    input_path_random_search = f"results/{objective_str}/random_search_{seed}.csv"
+
+    output_path = f"results/{objective_str}/gp_ei_{seed}.png"
+    plot_best_so_far(
+        input_path=input_path_gp_ei,
+        output_path=output_path,
+        title=f"{objective_str} Optimization: Gaussian Process Expected Improvement",
+        seed=seed
+    )
+
+    print(f"Saved plot to: {output_path}")
+
+    output_path = f"results/{objective_str}/random_search_{seed}.png"
+
+    plot_best_so_far(
+        input_path=input_path_random_search,
+        output_path=output_path,
+        title=f"{objective_str} Optimization: Random Search",
+        seed=seed
+    )
+
+    print(f"Saved plot to: {output_path}")
+
+    output_path = f"results/{objective_str}/multi_opt_{seed}.png"
+    input_paths = [input_path_gp_ei, input_path_random_search]
+
+    plot_multi_opt_best_so_far(
+        input_paths=input_paths,
+        output_path=output_path,
+        title=f"{objective_str} Optimization: Multiple Optimizers",
+        seed=seed
+    )
+
+    print(f"Saved plot to: {output_path}")
