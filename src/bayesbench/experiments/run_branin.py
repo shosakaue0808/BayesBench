@@ -11,7 +11,7 @@ def main():
     bounds = branin_bounds()
     budget = 50
     seeds = [42, 0, 456]  # Example seeds for reproducibility
-    seed = seeds[1]
+    seed = seeds[0]
     do_experiments(bounds, budget, seed, branin)
 if __name__ == "__main__":
     main()

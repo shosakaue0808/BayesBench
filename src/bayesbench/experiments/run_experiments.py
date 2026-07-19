@@ -32,12 +32,15 @@ def make_results_df(X: np.ndarray, y: np.ndarray, optimizer: str) -> pd.DataFram
 def do_experiments(bounds: np.ndarray, budget: int, seed: int, objective: Callable[[np.ndarray], float]):
     #sample inputs and get outputs on objective and return Lists
     name = objective.__name__
-    rng = np.random.default_rng(seed=seed)
+    rng_random = np.random.default_rng(seed=seed)
+    rng_gp_ei = np.random.default_rng(seed=seed)
+    rng_gp_lcb = np.random.default_rng(seed=seed)
+
 
     # ---- random_search ----
     results_dir = Path(f"results/{name}/random/")
     results_dir.mkdir(parents=True, exist_ok=True)
-    X, y = random_search(objective=objective, bounds=bounds, budget=budget, rng=rng)
+    X, y = random_search(objective=objective, bounds=bounds, budget=budget, rng=rng_random)
     df_random = make_results_df(X, y, optimizer="random_search")
     output_path = results_dir / f"{seed}.csv"
     df_random.to_csv(output_path, index=False)
@@ -50,7 +53,7 @@ def do_experiments(bounds: np.ndarray, budget: int, seed: int, objective: Callab
     results_dir = Path(f"results/{name}/gp_ei")
     results_dir.mkdir(parents=True, exist_ok=True)
     X, y = gp_expected_improvement(objective=objective, bounds= bounds, 
-                                   budget=budget, rng=rng, random_state=seed)
+                                   budget=budget, rng=rng_gp_ei, random_state=seed)
     df_gp_ei = make_results_df(X, y, optimizer="gp_ei")
     output_path = results_dir / f"{seed}.csv"
     df_gp_ei.to_csv(output_path, index=False)
@@ -63,7 +66,7 @@ def do_experiments(bounds: np.ndarray, budget: int, seed: int, objective: Callab
     results_dir = Path(f"results/{name}/gp_lcb")  
     results_dir.mkdir(parents=True, exist_ok=True)
 
-    X, y = gp_lcb(objective=objective, bounds=bounds, budget=budget, rng=rng, random_state=seed)
+    X, y = gp_lcb(objective=objective, bounds=bounds, budget=budget, rng=rng_gp_lcb, random_state=seed)
     df_gp_lcb = make_results_df(X, y, optimizer="gp_lcb")
     output_path = results_dir / f"{seed}.csv"
     df_gp_lcb.to_csv(output_path, index=False)

@@ -12,7 +12,7 @@ def main():
     bounds = ackley_bounds(d=d)
     budget = 50
     seeds = [42, 0, 456]  # Example seeds for reproducibility
-    seed = seeds[2]
+    seed = seeds[1]
     do_experiments(bounds, budget, seed, ackley)
 if __name__ == "__main__":
     main()
