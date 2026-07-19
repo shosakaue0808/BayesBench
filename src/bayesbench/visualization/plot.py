@@ -144,10 +144,12 @@ def plot_regret(input_path: str, output_path: str, title: str, seed: int) -> Non
 
 
 def plot_all(seed: int, objective_str: str)-> None:
-    input_path_gp_ei = f"results/{objective_str}/gp_ei_{seed}.csv"
-    input_path_random_search = f"results/{objective_str}/random_search_{seed}.csv"
+    input_path_gp_ei = f"results/{objective_str}/gp_ei/{seed}.csv"
+    input_path_random_search = f"results/{objective_str}/random/{seed}.csv"
+    input_path_gp_lcb = f"results/{objective_str}/gp_lcb/{seed}.csv"
 
-    output_path = f"results/{objective_str}/gp_ei_{seed}.png"
+# ----gp_ei----
+    output_path = f"results/{objective_str}/gp_ei/{seed}.png"
     plot_best_so_far(
         input_path=input_path_gp_ei,
         output_path=output_path,
@@ -157,8 +159,8 @@ def plot_all(seed: int, objective_str: str)-> None:
 
     print(f"Saved plot to: {output_path}")
 
-    output_path = f"results/{objective_str}/random_search_{seed}.png"
-
+# ----random_search----
+    output_path = f"results/{objective_str}/random/{seed}.png"
     plot_best_so_far(
         input_path=input_path_random_search,
         output_path=output_path,
@@ -168,8 +170,21 @@ def plot_all(seed: int, objective_str: str)-> None:
 
     print(f"Saved plot to: {output_path}")
 
+# ----gp_lcb----
+    output_path = f"results/{objective_str}/gp_lcb/{seed}.png"
+
+    plot_best_so_far(
+        input_path=input_path_gp_lcb,
+        output_path=output_path,
+        title=f"{objective_str} Optimization: Gaussian Process Lower Confidence Bound",
+        seed=seed
+    )
+
+    print(f"Saved plot to: {output_path}")
+
+# ----multi plot----
     output_path = f"results/{objective_str}/multi_opt_{seed}.png"
-    input_paths = [input_path_gp_ei, input_path_random_search]
+    input_paths = [input_path_gp_ei, input_path_random_search, input_path_gp_lcb]
 
     plot_multi_opt_best_so_far(
         input_paths=input_paths,

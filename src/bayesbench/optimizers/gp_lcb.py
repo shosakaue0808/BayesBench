@@ -1,14 +1,11 @@
 import numpy as np
 from collections.abc import Callable
 
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
-
-from bayesbench.acquisition_functions.expected_improvement import expected_improvement
 from bayesbench.optimizers.random_search import sample_uniform
-from bayesbench.optimizers.gp import make_gp_model, generate_candidate_points
+from bayesbench.optimizers.gp import generate_candidate_points, make_gp_model
+from bayesbench.acquisition_functions.lower_confidence_bound import lower_confidence_bound
 
-def gp_expected_improvement(
+def gp_lcb(
     objective: Callable[[np.ndarray], float],
     bounds: np.ndarray,
     budget: int,
@@ -16,7 +13,6 @@ def gp_expected_improvement(
     random_state: int= 42,
     n_initial: int = 5,
     n_candidates: int = 1000,
-    xi: float = 0.01,
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Run Gaussian Process Bayesian Optimization with Expected Improvement.
@@ -56,6 +52,7 @@ def gp_expected_improvement(
     X = []
     y = []
 
+
     # 1. Initial random evaluations to generate GP model
     for _ in range(n_initial):
         x = sample_uniform(bounds, rng)
@@ -86,17 +83,11 @@ def gp_expected_improvement(
         # doing inference from that posterior distribution.
         mean, std = gp.predict(candidates, return_std=True)
 
-        # Compute EI and pick the candidate with largest EI
-        best_y = float(np.min(y_train))
-        ei = expected_improvement(
-            mean=mean,
-            std=std,
-            f_best=best_y,
-            xi=xi,
-        )
+        # Compute lcb on candidates and take best candidate
+        lcb = lower_confidence_bound(mean, std, param = 1.0)
 
         # next points to evaluate the objective function
-        next_x = candidates[int(np.argmax(ei))]
+        next_x = candidates[int(np.argmin(lcb))]
         next_y = objective(next_x)
 
         X.append(next_x)

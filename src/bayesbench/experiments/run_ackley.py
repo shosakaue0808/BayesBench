@@ -10,10 +10,9 @@ import pandas as pd
 def main():
     d = 2
     bounds = ackley_bounds(d=d)
-    print(bounds)
     budget = 50
     seeds = [42, 0, 456]  # Example seeds for reproducibility
-    seed = seeds[1]
+    seed = seeds[2]
     do_experiments(bounds, budget, seed, ackley)
 if __name__ == "__main__":
     main()

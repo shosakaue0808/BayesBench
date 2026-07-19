@@ -4,6 +4,7 @@ run experiments on branin objective function using random_search method
 from collections.abc import Callable
 from bayesbench.optimizers.random_search import random_search
 from bayesbench.optimizers.gp_ei import gp_expected_improvement
+from bayesbench.optimizers.gp_lcb import gp_lcb
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -32,25 +33,40 @@ def do_experiments(bounds: np.ndarray, budget: int, seed: int, objective: Callab
     #sample inputs and get outputs on objective and return Lists
     name = objective.__name__
     rng = np.random.default_rng(seed=seed)
+
+    # ---- random_search ----
+    results_dir = Path(f"results/{name}/random/")
+    results_dir.mkdir(parents=True, exist_ok=True)
     X, y = random_search(objective=objective, bounds=bounds, budget=budget, rng=rng)
     df_random = make_results_df(X, y, optimizer="random_search")
-
-    results_dir = Path(f"results/{name}")
-    results_dir.mkdir(exist_ok=True)
-
-    output_path = results_dir / f"random_search_{seed}.csv"
+    output_path = results_dir / f"{seed}.csv"
     df_random.to_csv(output_path, index=False)
 
     print()
     print(f"Saved results to: {output_path}")
     print(f"Best value found: {df_random['best_so_far'].iloc[-1]:.6f}")
 
+    # ---- gp_ei ----
+    results_dir = Path(f"results/{name}/gp_ei")
+    results_dir.mkdir(parents=True, exist_ok=True)
     X, y = gp_expected_improvement(objective=objective, bounds= bounds, 
                                    budget=budget, rng=rng, random_state=seed)
     df_gp_ei = make_results_df(X, y, optimizer="gp_ei")
+    output_path = results_dir / f"{seed}.csv"
+    df_gp_ei.to_csv(output_path, index=False)
 
-    out_put_path = results_dir / f"gp_ei_{seed}.csv"
-    df_gp_ei.to_csv(out_put_path, index=False)
     print()
     print(f"Saved results to: {output_path}")
     print(f"Best value found: {df_gp_ei['best_so_far'].iloc[-1]:.6f}")
+
+    # ---- gp_lcb ----
+    results_dir = Path(f"results/{name}/gp_lcb")  
+    results_dir.mkdir(parents=True, exist_ok=True)
+
+    X, y = gp_lcb(objective=objective, bounds=bounds, budget=budget, rng=rng, random_state=seed)
+    df_gp_lcb = make_results_df(X, y, optimizer="gp_lcb")
+    output_path = results_dir / f"{seed}.csv"
+    df_gp_lcb.to_csv(output_path, index=False)
+
+    print(f"Saved results to: {output_path}")
+    print(f"Best value found: {df_gp_lcb['best_so_far'].iloc[-1]:.6f}")
