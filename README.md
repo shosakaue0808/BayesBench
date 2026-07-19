@@ -53,4 +53,7 @@ cd BayesBench
 conda create -n bayesbench python=3.11
 conda activate bayesbench
 pip install -e .
+
+# most of them are module, and they are packaged under src folder, so relative path is under src
+python -m bayesbench.experiments.run_branin 
 ```
