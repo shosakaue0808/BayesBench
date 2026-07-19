@@ -1,0 +1,16 @@
+experiment_name: branin_gp_lcb
+
+benchmark: 
+  name: branin
+
+optimizer: 
+  name: gp_lcb
+  params: 
+    n_initial: 5
+    n_candidates: 1000
+    beta: 2.0
+
+run:
+  budget: 50
+  seeds: [0, 1, 2, 3, 4]
+  output_dir: results/branin/gp_lcb

@@ -1,0 +1,16 @@
+experiment_name: ackley_random_search
+
+benchmark:
+  name: ackley
+  params:
+    d: 2
+
+optimizer:
+  name: random_search
+  params:
+  
+
+run:
+  budget: 50
+  seeds: [0, 1, 2, 3, 4]
+  output_dir: results/branin/random

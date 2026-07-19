@@ -1,0 +1,18 @@
+experiment_name: ackley_gp_ei
+
+benchmark: 
+  name: ackley
+  params:
+    d: 2
+
+optimizer: 
+  name: gp_ei
+  params: 
+    n_initial: 5
+    n_candidates: 1000
+    xi: 0.01
+
+run:
+  budget: 50
+  seeds: [0, 1, 2, 3, 4]
+  output_dir: results/ackley/gp_ei

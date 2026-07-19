@@ -10,6 +10,7 @@ def gp_lcb(
     bounds: np.ndarray,
     budget: int,
     rng: np.random.Generator,
+    beta: float = 2.0,
     random_state: int= 42,
     n_initial: int = 5,
     n_candidates: int = 1000,
@@ -84,7 +85,7 @@ def gp_lcb(
         mean, std = gp.predict(candidates, return_std=True)
 
         # Compute lcb on candidates and take best candidate
-        lcb = lower_confidence_bound(mean, std, param = 1.0)
+        lcb = lower_confidence_bound(mean, std, beta = beta)
 
         # next points to evaluate the objective function
         next_x = candidates[int(np.argmin(lcb))]

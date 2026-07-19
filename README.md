@@ -17,6 +17,7 @@ The first benchmark pipeline is implemented for the **Branin function** and **Ac
 - and visualization tools for comparing methods.
 
 ![Branin comparison](results/branin/multi_opt_0.png)
+![Ackley comparison](results/ackley/multi_opt_2.png)
 
 ## Why this project?
 

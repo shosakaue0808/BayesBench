@@ -1,0 +1,16 @@
+experiment_name: branin_gp_ei
+
+benchmark: 
+  name: branin
+
+optimizer: 
+  name: gp_ei
+  params: 
+    n_initial: 5
+    n_candidates: 1000
+    xi: 0.01
+
+run:
+  budget: 50
+  seeds: [0, 1, 2, 3, 4]
+  output_dir: results/branin/gp_ei

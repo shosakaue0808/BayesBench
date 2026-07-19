@@ -1,0 +1,22 @@
+experiment_name: ackley_all
+
+benchmark: 
+  name: ackley
+  params: 
+    d: 2
+
+optimizer: 
+  name: all
+  params: 
+    n_initial: 5
+    n_candidates: 1000
+    xi: 0.01
+    beta: 2.0
+
+run:
+  budget: 50
+  seeds: [0, 1, 2, 3, 4]
+  output_dir: 
+    random: results/ackley/random
+    gp_ei: results/ackley/gp_ei
+    gp_lcb: results/ackley/gp_lcb

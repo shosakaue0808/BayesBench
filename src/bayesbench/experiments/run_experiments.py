@@ -29,47 +29,58 @@ def make_results_df(X: np.ndarray, y: np.ndarray, optimizer: str) -> pd.DataFram
     df["optimizer"]=optimizer
     return df
 
-def do_experiments(bounds: np.ndarray, budget: int, seed: int, objective: Callable[[np.ndarray], float]):
-    #sample inputs and get outputs on objective and return Lists
-    name = objective.__name__
-    rng_random = np.random.default_rng(seed=seed)
-    rng_gp_ei = np.random.default_rng(seed=seed)
-    rng_gp_lcb = np.random.default_rng(seed=seed)
+def run_random_search(budget: int, seeds: list[int], bounds: np.ndarray, objective: Callable[[np.ndarray], float], output_dir: str):
+     # ---- random_search ----
+    for seed in seeds:
+        rng = np.random.default_rng(seed = seed)
+        output_dir=Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        X, y = random_search(objective=objective, bounds=bounds, budget=budget, rng=rng)
+        df_random = make_results_df(X, y, optimizer="random_search")
+        output_path = output_dir / f"{seed}.csv"
+        df_random.to_csv(output_path, index=False)
+
+        print()
+        print(f"Saved results to: {output_path}")
+        print(f"Best value found: {df_random['best_so_far'].iloc[-1]:.6f}")
+
+def run_gp_ei(budget: int, seeds: list[int], bounds: np.ndarray, xi: float,
+               objective: Callable[[np.ndarray], float], n_initial: int, n_candidates: int, output_dir: str)->None:
+    for seed in seeds:
+        rng = np.random.default_rng(seed = seed)
+        output_dir=Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        X, y = gp_expected_improvement(objective=objective, bounds= bounds, 
+                                   budget=budget, rng=rng, xi=xi, random_state=seed, n_initial=n_initial, n_candidates=n_candidates)
+        df_gp_ei = make_results_df(X, y, optimizer="gp_ei")
+        output_path = output_dir / f"{seed}.csv"
+        df_gp_ei.to_csv(output_path, index=False)
+
+        print()
+        print(f"Saved results to: {output_path}")
+        print(f"Best value found: {df_gp_ei['best_so_far'].iloc[-1]:.6f}")
+
+def run_gp_lcb(budget: int, seeds: list[int], bounds: np.ndarray, beta: float,  
+               objective: Callable[[np.ndarray], float], output_dir: str, n_initial: int, n_candidates: int):
+    for seed in seeds:
+        rng = np.random.default_rng(seed = seed)
+        output_dir=Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        X, y = gp_lcb(objective=objective, bounds=bounds, budget=budget, beta=beta, 
+                      rng=rng, random_state=seed, n_initial=n_initial, n_candidates=n_candidates)
+        df_gp_lcb = make_results_df(X, y, optimizer="gp_lcb")
+        output_path = output_dir / f"{seed}.csv"
+        df_gp_lcb.to_csv(output_path, index=False)
+
+        print(f"Saved results to: {output_path}")
+        print(f"Best value found: {df_gp_lcb['best_so_far'].iloc[-1]:.6f}")
 
 
-    # ---- random_search ----
-    results_dir = Path(f"results/{name}/random/")
-    results_dir.mkdir(parents=True, exist_ok=True)
-    X, y = random_search(objective=objective, bounds=bounds, budget=budget, rng=rng_random)
-    df_random = make_results_df(X, y, optimizer="random_search")
-    output_path = results_dir / f"{seed}.csv"
-    df_random.to_csv(output_path, index=False)
-
-    print()
-    print(f"Saved results to: {output_path}")
-    print(f"Best value found: {df_random['best_so_far'].iloc[-1]:.6f}")
-
-    # ---- gp_ei ----
-    results_dir = Path(f"results/{name}/gp_ei")
-    results_dir.mkdir(parents=True, exist_ok=True)
-    X, y = gp_expected_improvement(objective=objective, bounds= bounds, 
-                                   budget=budget, rng=rng_gp_ei, random_state=seed)
-    df_gp_ei = make_results_df(X, y, optimizer="gp_ei")
-    output_path = results_dir / f"{seed}.csv"
-    df_gp_ei.to_csv(output_path, index=False)
-
-    print()
-    print(f"Saved results to: {output_path}")
-    print(f"Best value found: {df_gp_ei['best_so_far'].iloc[-1]:.6f}")
-
-    # ---- gp_lcb ----
-    results_dir = Path(f"results/{name}/gp_lcb")  
-    results_dir.mkdir(parents=True, exist_ok=True)
-
-    X, y = gp_lcb(objective=objective, bounds=bounds, budget=budget, rng=rng_gp_lcb, random_state=seed)
-    df_gp_lcb = make_results_df(X, y, optimizer="gp_lcb")
-    output_path = results_dir / f"{seed}.csv"
-    df_gp_lcb.to_csv(output_path, index=False)
-
-    print(f"Saved results to: {output_path}")
-    print(f"Best value found: {df_gp_lcb['best_so_far'].iloc[-1]:.6f}")
+def run_all(budget: int, seeds: list[int], bounds: np.ndarray, 
+            objective: Callable[[np.ndarray], float], 
+            xi: float, beta: float, output_dir_random: str, output_dir_gp_ei: str, output_dir_gp_lcb: str)->None:
+    
+    run_random_search(budget=budget, seeds=seeds, bounds=bounds, objective=objective, output_dir=output_dir_random)
+    run_gp_ei(budget=budget, seeds=seeds, bounds=bounds, xi=xi, objective=objective, output_dir=output_dir_gp_ei)
+    run_gp_lcb(budget=budget, seeds=seeds, bounds=bounds, beta=beta, objective=objective, output_dir=output_dir_gp_lcb)
+    

@@ -142,55 +142,54 @@ def plot_regret(input_path: str, output_path: str, title: str, seed: int) -> Non
     """
     plot_metric(input_path, output_path, title, seed, REGRET_COLUMNS)
 
+def plot_random_search(seeds: list[int], objective_str: str):
+    # ----random_search----
+    for seed in seeds:
+        output_path = f"results/{objective_str}/random/{seed}.png"
+        plot_best_so_far(
+            input_path=f"results/{objective_str}/random/{seed}.csv",
+            output_path=output_path,
+            title=f"{objective_str} Optimization: Random Search",
+            seed=seed
+        )
+        print(f"Saved plot to: {output_path}")
 
-def plot_all(seed: int, objective_str: str)-> None:
-    input_path_gp_ei = f"results/{objective_str}/gp_ei/{seed}.csv"
-    input_path_random_search = f"results/{objective_str}/random/{seed}.csv"
-    input_path_gp_lcb = f"results/{objective_str}/gp_lcb/{seed}.csv"
+def plot_gp_ei(seeds: list[int], objective_str: str):
+    # ----gp_ei----
+    for seed in seeds:
+        output_path = f"results/{objective_str}/gp_ei/{seed}.png"
+        plot_best_so_far(
+            input_path=f"results/{objective_str}/gp_ei/{seed}.csv",
+            output_path=output_path,
+            title=f"{objective_str} Optimization: Gaussian Process Expected Improvement",
+            seed=seed
+        )
+        print(f"Saved plot to: {output_path}")
 
-# ----gp_ei----
-    output_path = f"results/{objective_str}/gp_ei/{seed}.png"
-    plot_best_so_far(
-        input_path=input_path_gp_ei,
-        output_path=output_path,
-        title=f"{objective_str} Optimization: Gaussian Process Expected Improvement",
-        seed=seed
-    )
+def plot_gp_lcb(seeds: list[int], objective_str: str):
+    for seed in seeds:
+        # ----gp_lcb----
+        output_path = f"results/{objective_str}/gp_lcb/{seed}.png"
 
-    print(f"Saved plot to: {output_path}")
+        plot_best_so_far(
+            input_path=f"results/{objective_str}/gp_lcb/{seed}.csv",
+            output_path=output_path,
+            title=f"{objective_str} Optimization: Gaussian Process Lower Confidence Bound",
+            seed=seed
+        )
+        print(f"Saved plot to: {output_path}")
 
-# ----random_search----
-    output_path = f"results/{objective_str}/random/{seed}.png"
-    plot_best_so_far(
-        input_path=input_path_random_search,
-        output_path=output_path,
-        title=f"{objective_str} Optimization: Random Search",
-        seed=seed
-    )
+def plot_random_gp_ei_lcb(seeds: list[int], objective_str: str):
+    # ----multi plot----
+    for seed in seeds:
+        output_path = f"results/{objective_str}/multi_opt_{seed}.png"
+        input_paths = [f"results/{objective_str}/random/{seed}.csv", f"results/{objective_str}/gp_ei/{seed}.csv", f"results/{objective_str}/gp_lcb/{seed}.csv"]
 
-    print(f"Saved plot to: {output_path}")
+        plot_multi_opt_best_so_far(
+            input_paths=input_paths,
+            output_path=output_path,
+            title=f"{objective_str} Optimization: Multiple Optimizers",
+            seed=seed
+        )
 
-# ----gp_lcb----
-    output_path = f"results/{objective_str}/gp_lcb/{seed}.png"
-
-    plot_best_so_far(
-        input_path=input_path_gp_lcb,
-        output_path=output_path,
-        title=f"{objective_str} Optimization: Gaussian Process Lower Confidence Bound",
-        seed=seed
-    )
-
-    print(f"Saved plot to: {output_path}")
-
-# ----multi plot----
-    output_path = f"results/{objective_str}/multi_opt_{seed}.png"
-    input_paths = [input_path_gp_ei, input_path_random_search, input_path_gp_lcb]
-
-    plot_multi_opt_best_so_far(
-        input_paths=input_paths,
-        output_path=output_path,
-        title=f"{objective_str} Optimization: Multiple Optimizers",
-        seed=seed
-    )
-
-    print(f"Saved plot to: {output_path}")
+        print(f"Saved plot to: {output_path}")
