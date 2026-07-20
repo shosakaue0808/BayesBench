@@ -41,6 +41,7 @@ BayesBench/
 │       ├── experiments/
 │       └── visualization/
 ├── results/
+├── configs/
 └── tests/
 ```
 
