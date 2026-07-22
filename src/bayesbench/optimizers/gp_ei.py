@@ -1,9 +1,6 @@
 import numpy as np
 from collections.abc import Callable
 
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
-
 from bayesbench.acquisition_functions.expected_improvement import expected_improvement
 from bayesbench.optimizers.random_search import sample_uniform
 from bayesbench.optimizers.gp import make_gp_model, generate_candidate_points
